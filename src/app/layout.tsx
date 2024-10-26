@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Work_Sans } from "next/font/google";
 import "./globals.css";
 
-const font = Inter({
+const font = Work_Sans({
   subsets: ["latin"],
 });
 
