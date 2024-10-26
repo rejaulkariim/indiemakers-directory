@@ -1,4 +1,5 @@
 import SearchForm from "@/components/shared/SearchForm";
+import StartupCard from "@/components/shared/StartupCard";
 import { auth } from "@/lib/auth";
 
 export default async function Home({
@@ -45,6 +46,8 @@ export default async function Home({
             <p className="no-results">No startups found</p>
           )} */}
         </ul>
+
+        <StartupCard />
       </section>
 
       {/* <SanityLive /> */}

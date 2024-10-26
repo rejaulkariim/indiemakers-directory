@@ -1,47 +1,42 @@
-import { auth, signIn, signOut } from "@/lib/auth";
+import Logo from "@/components/shared/Logo";
+import MaxWidthWrapper from "@/components/shared/MaxWidthWrapper";
+import MobileNav from "@/components/shared/MobileNav";
+import UserAccountNav from "@/components/shared/UserAccountNav";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { getUserFromDB } from "@/server/actions/auth.action";
 import Link from "next/link";
+import NavItems from "./Navitems";
 
 const Navbar = async () => {
-  const session = await auth();
+  const user = await getUserFromDB();
 
   return (
-    <header className="px-5 py-3 bg-white shadow-sm font-work-sans">
-      <nav className="flex justify-between items-center">
-        <Link href="/" className="flex items-center">
-          <span className="text-xl font-bold">Indiemakers</span>
-        </Link>
-        <div className="flex items-center gap-5">
-          {session && session.user ? (
-            <>
-              <Link href="/startups/create">
-                <span>Create</span>
-              </Link>
-              <form
-                action={async () => {
-                  "use server";
-                  await signOut({ redirectTo: "/" });
-                }}
-                className="text-blue-500 hover:text-blue-700"
+    <header className="h-16 border-b w-full border-border/40 bg-background">
+      <MaxWidthWrapper>
+        <nav className="h-full w-full flex justify-between items-center">
+          <Logo />
+
+          {/* UserAccountNav or Login on the right */}
+          <div className="hidden md:flex justify-end items-center space-x-10">
+            <NavItems />
+            {user ? (
+              <UserAccountNav user={user} />
+            ) : (
+              <Link
+                href="/auth/login"
+                className={cn(buttonVariants({ variant: "outline" }))}
               >
-                <button type="submit">Logout</button>
-              </form>
-              <Link href={`/user/${session?.id}`}>
-                <span>{session?.user?.name}</span>
+                Login
               </Link>
-            </>
-          ) : (
-            <form
-              action={async () => {
-                "use server";
-                await signIn("github");
-              }}
-              className="text-blue-500 hover:text-blue-700"
-            >
-              <button type="submit">Login</button>
-            </form>
-          )}
-        </div>
-      </nav>
+            )}
+          </div>
+
+          <div className="md:hidden w-44 flex justify-end items-center space-x-4">
+            {user ? <UserAccountNav user={user} /> : <MobileNav />}
+          </div>
+        </nav>
+      </MaxWidthWrapper>
     </header>
   );
 };
